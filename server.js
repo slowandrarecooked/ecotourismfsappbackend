@@ -3,6 +3,7 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const app = express();
 const bcrypt = require("bcrypt");
+const cors = require("cors");
 require("dotenv").config();
 const { connection } = require("./config/db");
 
@@ -11,6 +12,7 @@ const { UserModel } = require("./models/users.model");
 const {
   destinationController,
 } = require("./controllers/destinations.controller");
+app.use(cors());
 app.use(express.json());
 app.use("/users", userController);
 app.use("/destinations", destinationController);
