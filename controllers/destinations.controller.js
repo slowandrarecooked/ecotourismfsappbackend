@@ -36,7 +36,7 @@ destinationController.get(
   authentication,
   async (req, res) => {
     const { destinationId } = req.params;
-    const destination = await DestinationModel.find({ _id: destinationId });
+    const destination = await DestinationModel.findOne({ _id: destinationId });
     res.send(destination);
   }
 );
