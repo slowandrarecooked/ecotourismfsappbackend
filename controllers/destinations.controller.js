@@ -9,15 +9,20 @@ destinationController.get("/", authentication, async (req, res) => {
 
   const queries = req.query;
   if (JSON.stringify(queries) === "{}") {
-    destinations = await DestinationModel.find();
+    destinations = await DestinationModel.find().limit(3);
+  }
+  if (queries.rating) {
+    destinations = await DestinationModel.find({
+      rating: queries.rating,
+    }).limit(3);
   }
   if (queries.q) {
     destinations = await DestinationModel.find({
       location: { $regex: queries.q },
-    });
+    }).limit(3);
   }
   if (queries.sort) {
-    destinations = await DestinationModel.find();
+    destinations = await DestinationModel.find().limit(3);
     if (queries.order === "asc") {
       destinations.sort((a, b) => {
         Number(a.fees) - Number(b.fees);
