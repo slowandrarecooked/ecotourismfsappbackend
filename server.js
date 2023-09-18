@@ -27,8 +27,12 @@ app.post("/signup", async (req, res) => {
     email,
     password: hash,
   });
-  await newuser.save();
-  res.send({ msg: "user added" });
+  try {
+    await newuser.save();
+    res.send({ msg: "user added" });
+  } catch (error) {
+    res.send({ msg: "Unable to add user" });
+  }
 });
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;

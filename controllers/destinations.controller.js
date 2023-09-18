@@ -8,6 +8,9 @@ destinationController.get("/", authentication, async (req, res) => {
   let destinations = [];
 
   const queries = req.query;
+  if (JSON.stringify(queries) === "{}") {
+    destinations = await DestinationModel.find();
+  }
   if (queries.q) {
     destinations = await DestinationModel.find({
       location: { $regex: queries.q },
