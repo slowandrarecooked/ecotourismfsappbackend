@@ -8,21 +8,24 @@ destinationController.get("/", authentication, async (req, res) => {
   let destinations = [];
 
   const queries = req.query;
-  if (JSON.stringify(queries) === "{}") {
-    destinations = await DestinationModel.find().limit(3);
+  if (queries.page) {
+    destinations = await DestinationModel.find()
+      .limit(6)
+      .skip((Number(queries.page) - 1) * 6);
   }
+
   if (queries.rating) {
     destinations = await DestinationModel.find({
       rating: queries.rating,
-    }).limit(3);
+    }).limit(6);
   }
   if (queries.q) {
     destinations = await DestinationModel.find({
       location: { $regex: queries.q },
-    }).limit(3);
+    }).limit(6);
   }
   if (queries.sort) {
-    destinations = await DestinationModel.find().limit(3);
+    destinations = await DestinationModel.find().limit(6);
     if (queries.order === "asc") {
       destinations.sort((a, b) => {
         Number(a.fees) - Number(b.fees);
@@ -34,11 +37,7 @@ destinationController.get("/", authentication, async (req, res) => {
       });
     }
   }
-  if (queries.page) {
-    destinations = await DestinationModel.find()
-      .skip(3 * (queries.page - 1))
-      .limit(3);
-  }
+
   res.send({ data: destinations });
 });
 destinationController.get(
