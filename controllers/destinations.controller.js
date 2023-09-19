@@ -34,6 +34,11 @@ destinationController.get("/", authentication, async (req, res) => {
       });
     }
   }
+  if (queries.page) {
+    destinations = await DestinationModel.find()
+      .skip(3 * (queries.page - 1))
+      .limit(3);
+  }
   res.send({ data: destinations });
 });
 destinationController.get(
