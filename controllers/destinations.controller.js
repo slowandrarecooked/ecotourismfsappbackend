@@ -13,18 +13,23 @@ destinationController.get("/", authentication, async (req, res) => {
       .limit(6)
       .skip((Number(queries.page) - 1) * 6);
   }
-
-  if (queries.rating) {
+  if (queries.rating && queries.sort) {
+    destinations = await DestinationModel.find().limit(6);
+    if (queries.order === "asc") {
+      destinations = await DestinationModel.find({ rating: queries.rating })
+        .limit(6)
+        .sort({ fees: 1 });
+    }
+    if (queries.order === "desc") {
+      destinations = await DestinationModel.find({ rating: queries.rating })
+        .limit(6)
+        .sort({ fees: -1 });
+    }
+  } else if (queries.rating) {
     destinations = await DestinationModel.find({
       rating: queries.rating,
     }).limit(6);
-  }
-  if (queries.q) {
-    destinations = await DestinationModel.find({
-      location: { $regex: queries.q },
-    }).limit(6);
-  }
-  if (queries.sort) {
+  } else if (queries.sort) {
     destinations = await DestinationModel.find().limit(6);
     if (queries.order === "asc") {
       destinations = await DestinationModel.find().limit(6).sort({ fees: 1 });
@@ -32,6 +37,11 @@ destinationController.get("/", authentication, async (req, res) => {
     if (queries.order === "desc") {
       destinations = await DestinationModel.find().limit(6).sort({ fees: -1 });
     }
+  }
+  if (queries.q) {
+    destinations = await DestinationModel.find({
+      location: { $regex: queries.q },
+    }).limit(6);
   }
 
   res.send({ data: destinations });
