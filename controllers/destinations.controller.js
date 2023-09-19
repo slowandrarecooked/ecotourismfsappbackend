@@ -27,14 +27,10 @@ destinationController.get("/", authentication, async (req, res) => {
   if (queries.sort) {
     destinations = await DestinationModel.find().limit(6);
     if (queries.order === "asc") {
-      destinations.sort((a, b) => {
-        Number(a.fees) - Number(b.fees);
-      });
+      destinations = await DestinationModel.find().limit(6).sort({ fees: 1 });
     }
     if (queries.order === "desc") {
-      destinations.sort((a, b) => {
-        Number(b.fees) - Number(a.fees);
-      });
+      destinations = await DestinationModel.find().limit(6).sort({ fees: -1 });
     }
   }
 
