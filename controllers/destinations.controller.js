@@ -32,10 +32,16 @@ destinationController.get("/", authentication, async (req, res) => {
   } else if (queries.sort) {
     destinations = await DestinationModel.find().limit(6);
     if (queries.order === "asc") {
-      destinations = await DestinationModel.find().limit(6).sort({ fees: 1 });
+      destinations = await DestinationModel.find()
+        .limit(6)
+        .sort({ fees: 1 })
+        .skip((Number(queries.page) - 1) * 6);
     }
     if (queries.order === "desc") {
-      destinations = await DestinationModel.find().limit(6).sort({ fees: -1 });
+      destinations = await DestinationModel.find()
+        .limit(6)
+        .sort({ fees: -1 })
+        .skip((Number(queries.page) - 1) * 6);
     }
   }
   if (queries.q) {
